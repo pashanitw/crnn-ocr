@@ -2,15 +2,25 @@
 import torch
 import torch.nn as nn
 ##
-class Ctc_Layer(nn.Module):
+class Ctc_Loss(nn.Module):
     def __init__(self, vocab_size, blank=0, reduction="mean"):
-        super(Ctc_Layer, self).__init__()
+        super(Ctc_Loss, self).__init__()
         self.vocab_size = vocab_size
         self.blank = blank
         self.reduction = reduction
-    def forward(self, logits, targets, input_lengths, target_lengths):
-        logits = logits.permute(1, 0, 2)
-        return nn.CTCLoss(blank=self.blank, reduction=self.reduction)(logits, targets, input_lengths, target_lengths)
+    def forward(self, y_pred, y_target):
+        y_pred = y_pred.permute(1, 0, 2)
+        y_pred = y_pred.log_softmax(2)
+        T = y_pred.shape[0]
+        N = y_pred.shape[1]
+        S = y_target.shape[1]
+        input_lengths = torch.full(size=(N,), fill_value=T, dtype=torch.long)
+        target_lengths = torch.full(size=(N,), fill_value=S, dtype=torch.long)
+        print("**************** lengths ***************")
+        print(input_lengths)
+        print(target_lengths)
+        loss = nn.functional.ctc_loss(y_pred, y_target, input_lengths, target_lengths, reduction=self.reduction)
+        return loss
 ##
 logits = torch.randn(1, 10) #ypred
 gt = torch.tensor([[1, 2, 3, 4, 5]]) #ytrue
@@ -31,7 +41,13 @@ target = torch.randint(low=1, high=C, size=(N, S), dtype=torch.long)
 input_lengths = torch.full(size=(N,), fill_value=T, dtype=torch.long)
 print(input.shape,target.shape)
 target_lengths = torch.randint(low=S_min, high=S, size=(N,), dtype=torch.long)
+print("======= lengths =======")
+print(input.shape)
+print(target.shape)
 print(input_lengths)
 print(target_lengths)
+##
+
+
 ##
 

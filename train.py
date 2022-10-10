@@ -5,28 +5,29 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader
 ##
 from model import CaptchaModel
-from data import build_datapipes
-
+from data import create_dataloaders, getVocabSize
+from ctc_loss import Ctc_Loss
 ##
 batch_size = 8
+vocab_len = getVocabSize()
+
 def train(device="cpu"):
-    model = CaptchaModel(vocab_size=10, dropout=0.2)
+    train_loader, val_loader=create_dataloaders()
+    model = CaptchaModel(vocab_size=vocab_len, dropout=0.2)
+    criterion = Ctc_Loss(vocab_size=vocab_len)
     model.train()
-    train_iter = build_datapipes('./captcha_images_v2')
-    train_loader = DataLoader(train_iter, batch_size=8, shuffle=True)
-    for batch_idx, (data, target) in enumerate(train_loader):
-       # data = data.squeeze(1)
-        print("******* data shape ******", data.shape, target.shape)
-        data, target = data.to(device), target.to(device)
-        #optimizer.zero_grad()
-        output = model(data)
-        print("========= out shape =========")
-        print(output.shape)
+    for batch_idx, (images, labels) in enumerate(train_loader):
+        out = model(images)
+        loss = criterion(out, labels)
+        print("============= loss is ======")
+        print(loss)
+        print(out.shape)
         break
-
-
 ##
 train()
+
+##
+
 
 ##
 

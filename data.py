@@ -119,4 +119,6 @@ for i, (data, target) in enumerate(train_loader):
     break
 
 ##
-
+def getVocabSize():
+    return len(characters)
+##
