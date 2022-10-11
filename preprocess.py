@@ -104,19 +104,19 @@ def create_dataloaders():
     train_size = int(0.9 * len(data_iter))
     val_size = len(data_iter) - train_size
     train_dataset, val_dataset = random_split(data_iter, [train_size, val_size])
-    train_loader = DataLoader(train_dataset, batch_size=8, shuffle=True)
-    val_loader = DataLoader(val_dataset, batch_size=8, shuffle=False)
+    train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
+    val_loader = DataLoader(val_dataset, batch_size=16, shuffle=False)
     return train_loader, val_loader
 ##
 
-data_iter = build_datapipes('./captcha_images_v2')
-train_loader = DataLoader(data_iter, batch_size=2, shuffle=True)
-
-for i, (data, target) in enumerate(train_loader):
-    print("==== coming here =====")
-    print(target)
-    print("======== done ========")
-    break
+# data_iter = build_datapipes('./captcha_images_v2')
+# train_loader = DataLoader(data_iter, batch_size=2, shuffle=True)
+#
+# for i, (data, target) in enumerate(train_loader):
+#     print("==== coming here =====")
+#     print(target)
+#     print("======== done ========")
+#     break
 
 ##
 def getVocabSize():
