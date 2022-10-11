@@ -33,7 +33,7 @@ def train(epochs,device="cpu"):
     print('Finished Training')
 
 ##
-train(epochs=5)
+# train(epochs=5)
 
 ##
 
