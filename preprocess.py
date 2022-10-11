@@ -49,7 +49,9 @@ def getDataInfo():
     return max_length,characters, downsample_factor
 ##
 def get_lookup():
-    return vocab.vocab(Counter(characters))
+    char_vocb =  vocab.vocab(Counter(characters), specials=['<blank>'])
+    char_vocb.set_default_index(char_vocb['<blank>'])
+    return char_vocb
 ##
 data_transforms = {
     "train": transforms.Compose(
@@ -109,16 +111,11 @@ def create_dataloaders():
     return train_loader, val_loader
 ##
 
-# data_iter = build_datapipes('./captcha_images_v2')
-# train_loader = DataLoader(data_iter, batch_size=2, shuffle=True)
-#
-# for i, (data, target) in enumerate(train_loader):
-#     print("==== coming here =====")
-#     print(target)
-#     print("======== done ========")
-#     break
-
-##
 def getVocabSize():
-    return len(characters)
+    return len(characters)+1
 ##
+# lookup = get_lookup()
+# lookup.lookup_indices(['2', '3', '4', '5', '6', '7', '8', 'b', 'c', 'd', 'e', 'f', 'g', 'm', 'n', 'p', 'w', 'x', 'y'])
+# len(lookup)
+##
+

@@ -16,7 +16,7 @@ class Ctc_Loss(nn.Module):
         S = y_target.shape[1]
         input_lengths = torch.full(size=(N,), fill_value=T, dtype=torch.long)
         target_lengths = torch.full(size=(N,), fill_value=S, dtype=torch.long)
-        loss = nn.functional.ctc_loss(y_pred, y_target, input_lengths, target_lengths, reduction=self.reduction)
+        loss = nn.functional.ctc_loss(y_pred, y_target, input_lengths, target_lengths,blank=self.blank, reduction=self.reduction)
         return loss
 ##
 # logits = torch.randn(1, 10) #ypred
